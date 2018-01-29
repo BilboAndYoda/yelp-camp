@@ -1,35 +1,68 @@
-var express = require("express");
-var app = express();
-var bodyParser = require("body-parser");
-var request = require('request');
+var express = require("express"),
+    app = express(),
+    bodyParser = require("body-parser"),
+    request = require('request'),
+    mongoose = require("mongoose")
 
-var campgrounds = [
-    { name: "Yosemite", image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1050&q=80" },
-    { name: "Big Sur", image: "https://images.unsplash.com/photo-1503276119451-51ac0fdc4668?auto=format&fit=crop&w=1050&q=80" },
-    { name: "Hume Lake", image: "https://images.unsplash.com/photo-1500046908247-f52924592df4?auto=format&fit=crop&w=967&q=80" },
-    { name: "Yellowstone", image: "https://images.unsplash.com/photo-1507760754559-9bb621edc403?auto=format&fit=crop&w=968&q=80" }
-];
-
+mongoose.connect("mongodb://localhost/yelp_camp");
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+
+//SCHEMA SETUP
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String
+});
+
+var Campground = mongoose.model("Campground", campgroundSchema);
+
+// Campground.create({
+//         name: "Big Sur",
+//         image: "https://images.unsplash.com/photo-1503276119451-51ac0fdc4668?auto=format&fit=crop&w=1050&q=80"
+//     },
+//     function(err, campground) {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             console.log("NEWLY CREATED CAMPGROUND: ");
+//             console.log(campground);
+//         }
+//     });
+
 
 app.get("/", function(req, res) {
     res.render('index');
 });
 
 app.get("/campgrounds", function(req, res) {
-    res.render('campgrounds', { campgrounds: campgrounds });
+    //get all campgounrounds from DB
+    Campground.find({}, function(err, campgrounds) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render('campgrounds', { campgrounds: campgrounds });
+        }
+    })
+
 });
 
 app.post("/campgrounds", function(req, res) {
     var name = req.body.name;
     var image = req.body.image;
     var newCamp = { name: name, image: image };
-    campgrounds.push(newCamp);
-
-    res.redirect('/campgrounds');
+    //create new campground and save to database
+    Campground.create(newCamp, function(err, newlyCreated) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.redirect('/campgrounds');
+        }
+    });
 });
 
 app.get("/campgrounds/new", function(req, res) {
