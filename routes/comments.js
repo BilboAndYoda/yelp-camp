@@ -32,7 +32,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
             Comment.create(req.body.comment, function(err, comment) {
                 if (err) {
                     req.flash("error", "Could not create comment.")
-                    console.log(err);
+                    res.redirect("back");
                 }
                 else {
                     //add username and id to comment
