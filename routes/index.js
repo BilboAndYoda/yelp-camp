@@ -16,7 +16,7 @@ router.get("/", function(req, res) {
 
 //signup form
 router.get("/signup", function(req, res) {
-    res.render("signup");
+    res.render("signup", { page: "signup" });
 })
 
 //signup logic
@@ -24,8 +24,7 @@ router.post("/signup", function(req, res) {
     var newUser = new User({ username: req.body.username });
     User.register(newUser, req.body.password, function(err, user) {
         if (err) {
-            req.flash("error", err.message);
-            return res.render("signup")
+            return res.render("signup", { error: err.message })
         }
         passport.authenticate("local")(req, res, function() {
             req.flash("success", "Hello, " + user.username);
@@ -34,9 +33,9 @@ router.post("/signup", function(req, res) {
     });
 })
 
-//signin form
+//SHOW signin form
 router.get("/signin", function(req, res) {
-    res.render("signin");
+    res.render("signin", { page: "signin" });
 })
 
 //signin logic

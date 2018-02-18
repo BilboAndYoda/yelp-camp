@@ -11,7 +11,7 @@ router.get("/", function(req, res) {
             console.log(err);
         }
         else {
-            res.render('campgrounds/index', { campgrounds: campgrounds });
+            res.render('campgrounds/index', { campgrounds: campgrounds, page: 'campgrounds' });
         }
     })
 
@@ -25,11 +25,13 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 //CREATE - add new campground to DB
 router.post("/", middleware.isLoggedIn, function(req, res) {
     var name = req.body.name;
+    var price = req.body.price;
     var image = req.body.image;
     var author = { id: req.user._id, username: req.user.username };
     var desc = req.body.description;
     var newCamp = {
         name: name,
+        price: price,
         image: image,
         author: author,
         description: desc
