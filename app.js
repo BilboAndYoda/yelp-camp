@@ -24,6 +24,7 @@ app.use(methodOverride("_method"));
 app.use(flash());
 // seedDB();
 
+app.locals.moment = require('moment');
 // PASSPORT CONFIG
 app.use(require("express-session")({
     secret: "thicc blueberries",
