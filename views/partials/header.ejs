@@ -32,7 +32,7 @@
                       <li class="<%= typeof page !== 'undefined' && page === 'signin' ? 'active' : '' %>"><a href="/signin">Sign In</a></li>
                       <li class="<%= typeof page !== 'undefined' && page === 'signup' ? 'active' : '' %>"><a href="/signup">Sign Up</a></li>
                   <% } else { %>
-                      <li><a href="#">Signed In As <%= currentUser.username %></a></li>
+                      <li><a href="#">Welcome, <%= currentUser.username %></a></li>
                       <li><a href="/signout">Sign Out</a></li>
                   <% } %>
               </ul>
